@@ -1,8 +1,8 @@
 class Media {
-    constructor(title, isCheckedOut, ratings) {
+    constructor(title) {
         this._title = title;
-        this._isCheckedOut = isCheckedOut;
-        this._ratings = ratings;
+        this._isCheckedOut = false;
+        this._ratings = [];
     }
     get title() {
         return this._title;
@@ -13,16 +13,33 @@ class Media {
     get ratings() {
         return this._ratings;
     }
-    getAverageRating() {}
-    toggleCheckOutStatus() {}
-    addRating() {}
+    set isCheckedOut(isCheckedOut) {
+        this._isCheckedOut = isCheckedOut;
+    }
+    toggleCheckOutStatus() {
+        if (this._isCheckedOut) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    getAverageRating() {
+        const reducer = (accumulator, currentValue) =>
+            accumulator + currentValue;
+        const sum = this.ratings.reduce(reducer);
+        const averageNumb = () => sum / this.ratings.length;
+        return averageNumb();
+    }
+    addRating(rate) {
+        return this.ratings.push(rate);
+    }
 }
 
 class Book extends Media {
-    constructor(author, title, pages, isCheckedOut, ratings) {
-        super(title, isCheckedOut, ratings);
-        this._author = author;
-        this._pages = pages;
+    constructor(title, author, pages) {
+        super(title);
+        this._author = '';
+        this._pages = 327;
     }
     get author() {
         return this._author;
@@ -33,10 +50,10 @@ class Book extends Media {
 }
 
 class Movie extends Media {
-    constructor(director, title, runTime, isCheckedOut, ratings) {
-        super(title, isCheckedOut, ratings);
-        this._director = director;
-        this._runTime = runTime;
+    constructor(director, title, runTime) {
+        super(title);
+        this._director = '';
+        this._runTime = 120;
     }
     get director() {
         return this._director;
@@ -47,10 +64,10 @@ class Movie extends Media {
 }
 
 class CD extends Media {
-    constructor(artist, title, isCheckedOut, ratings, songs) {
-        super(title, isCheckedOut, ratings);
-        this._artist = artist;
-        this._songs = songs;
+    constructor(artist, title, songs) {
+        super(title);
+        this._artist = '';
+        this._songs = [''];
     }
     get artist() {
         return this._artist;
@@ -59,3 +76,39 @@ class CD extends Media {
         return this._songs;
     }
 }
+
+const historyOfEverything = new Book(
+    'A Short History of Nearly Everything',
+    'Bill Bryson',
+    544
+);
+console.log(historyOfEverything.toggleCheckOutStatus());
+console.log(historyOfEverything.isCheckedOut);
+console.log(historyOfEverything.addRating(4));
+console.log(historyOfEverything.addRating(5));
+console.log(historyOfEverything.addRating(5));
+console.log(historyOfEverything.getAverageRating());
+
+const speed = new Movie('Jan de Bont', 'Speed', 116);
+console.log(speed.toggleCheckOutStatus());
+console.log(speed.isCheckedOut);
+console.log(speed.addRating(1));
+console.log(speed.addRating(1));
+console.log(speed.addRating(5));
+console.log(speed.getAverageRating());
+
+const rock = new CD('Queen', 'A Night at the Opera', [
+    'Death on Two Legs (Dedicated to...)',
+    'Lazing on a Sunday Afternoon',
+    "I'm in Love with My Car",
+    "You're My Best Friend",
+    '39',
+    'Sweet Lady',
+    'Seaside Rendezvous',
+]);
+console.log(rock.toggleCheckOutStatus());
+console.log(rock.isCheckedOut);
+console.log(rock.addRating(5));
+console.log(rock.addRating(4.5));
+console.log(rock.addRating(5));
+console.log(rock.getAverageRating());
